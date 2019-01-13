@@ -6,6 +6,8 @@ import javax.swing.*;
 
 public class UserInterface extends JPanel implements MouseListener, MouseMotionListener{
     
+    
+
     static int x=0,y=0;
     @Override
     public void paintComponent(Graphics g){

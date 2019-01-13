@@ -68,7 +68,7 @@ public class ChessGame {
         * b (a space represents no capture))
         */
         
-        /*JFrame f;
+        /*JFrame f; //the window for the software.
         f = new JFrame("Viotan Ultimate Chess");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         UserInterface ui = new UserInterface();
@@ -78,7 +78,7 @@ public class ChessGame {
         */
         
         System.out.println(possibleMoves());
-        //System.out.println(alphaBeta(globalDepth, 1000000, -1000000, "",0));
+        makeMove(alphaBeta(globalDepth, 1000000, -1000000,"",0));
         
         makeMove("6050 ");
         undoMove("6050 ");
@@ -93,23 +93,20 @@ public class ChessGame {
         //we return the move in the first five spaces then the score takes up whatever is after.
         //trees grow down not up?? wtf vick!
         
-        //String list = possibleMoves();
-        String list = "1";
+        String list = possibleMoves();
         if (depth == 0  || list.length() == 0){
-        
-        
         //sort later
-          return move + (rating()* (player*2+1));
+          return move + (rating()* (player*2-1));
         }
-        list ="";
+//        list ="";
         
-        System.out.println("the number of moves are: ");
-        Scanner sc = new Scanner(System.in);
-        int temp = sc.nextInt();
-        
-        for(int i=0;i< temp; i++){
-            list+="1111b";
-        }
+//        System.out.println("the number of moves are: ");
+//        Scanner sc = new Scanner(System.in);
+//        int temp = sc.nextInt();
+//        
+//        for(int i=0;i< temp; i++){
+//            list+="1111b";
+//        }
           player = 1-player;
           
           for(int i=0; i<list.length(); i+=5){
@@ -135,7 +132,31 @@ public class ChessGame {
         if(player==0){return move+beta;} else{return move+alpha;}
 }
     
-    public static void flipBoard(){}
+    public static void flipBoard(){
+     
+     String temp;
+       for (int i =0;i<32;i++){
+            
+            int r=i/8, c=i%8;
+            
+            if(Character.isUpperCase(chessBoard[r][c].charAt(0))){
+                temp=chessBoard[r][c].toLowerCase();
+        }else{
+            temp=chessBoard[r][c].toUpperCase();
+            }
+            
+            if(Character.isUpperCase(chessBoard[7-r][7-c].charAt(0))){
+                chessBoard[r][c] = chessBoard[7-r][7-c].toLowerCase();
+        }else{
+            chessBoard[r][c] = chessBoard[7-r][7-c].toUpperCase();
+            }
+            chessBoard[7-r][7-c]= temp;
+    }
+    int kingTemp = kingPositionCap;
+    kingPositionCap = 63-kingPositionLow;
+    kingPositionLow = 63-kingTemp;
+    
+    }
     
     
     
@@ -146,6 +167,9 @@ public class ChessGame {
             
             chessBoard[Character.getNumericValue(move.charAt(2))][Character.getNumericValue(move.charAt(3))]= chessBoard[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))];
             chessBoard[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))] = " ";
+            if("A".equals(chessBoard[Character.getNumericValue(move.charAt(2))][Character.getNumericValue(move.charAt(3))])){
+                kingPositionCap=8*Character.getNumericValue(move.charAt(2))+Character.getNumericValue(move.charAt(3));
+            }
         }else{
             //if pawn promo
             //column1, column2, captured-piece, new-piece, P
@@ -160,6 +184,9 @@ public class ChessGame {
             
             chessBoard[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))]= chessBoard[Character.getNumericValue(move.charAt(2))][Character.getNumericValue(move.charAt(3))];
             chessBoard[Character.getNumericValue(move.charAt(2))][Character.getNumericValue(move.charAt(3))] = String.valueOf(move.charAt(4));
+            if("A".equals(chessBoard[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))])){
+                kingPositionCap=8*Character.getNumericValue(move.charAt(0))+Character.getNumericValue(move.charAt(1));
+            }
         }else{
             //if pawn promo
             //column1, column2, captured-piece, new-piece, P
@@ -199,9 +226,7 @@ public class ChessGame {
     }
     
     public static String possibleP (int i){
-    
-    System.out.println("At this iteration for the white pawn i equals " + i);
-        
+            
         String list ="", oldPiece;
         int row =i/8, column = i%8;
         for(int j =-1; j<=1; j+=2) {
@@ -219,7 +244,8 @@ public class ChessGame {
                 //let Herto ZX give them only what they deserve. 
                 //they beleive in you.
                
-                
+                //find out why the variables are initialized below this line, 
+                //im guessing its for the undo move functionLITY
                 chessBoard[row][column]="P";
                 chessBoard[row-1][column + j]= oldPiece;
                 }
@@ -549,9 +575,7 @@ public class ChessGame {
     
     
     public static int rating(){
-        System.out.println("the score is");
-        Scanner sc = new Scanner(System.in);
-        return sc.nextInt();
+        return 1;
         
     }
     
